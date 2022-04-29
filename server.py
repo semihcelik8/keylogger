@@ -12,8 +12,15 @@ def process_input():
             try:
                 conn.send("monitor".encode("utf-8"))
                 print("Sent monitor command")
-                text_file_data = (conn.recv(1024)).decode("utf-8")
+                text_file_data = (conn.recv(1048576)).decode("utf-8")
                 print(text_file_data)
+            except:
+                print("[FAILED] Could not send " + str(input_data) + " command")
+        elif input_data == "refresh":
+            try:
+                conn.send("refresh".encode("utf-8"))
+                response = (conn.recv(1024)).decode("utf-8")
+                print(response)
             except:
                 print("[FAILED] Could not send " + str(input_data) + " command")
 
@@ -22,3 +29,4 @@ threading.Thread(target = process_input).start()
 while True:
     s.listen()
     conn, addr = s.accept()
+    print(str(addr) + " joined")
