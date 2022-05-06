@@ -22,7 +22,7 @@ while True:
     while True:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            s.connect(("192.168.1.36", 62121))
+            s.connect(("10.0.1.227", 62121))
             break
         except:
             print("Trying to connect...")
